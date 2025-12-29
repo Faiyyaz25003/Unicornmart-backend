@@ -6,6 +6,7 @@ import userRoutes from "./Routes/UserRoutes.js";
 import productRoutes from "./Routes/productRoutes.js";
 import adminRoutes from "./Routes/adminRoutes.js";
 import orderRoutes from "./Routes/orderRoutes.js";
+import contactRoutes from "./Routes/contactRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -21,6 +22,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api", contactRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () =>
