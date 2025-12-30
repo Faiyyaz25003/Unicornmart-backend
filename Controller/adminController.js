@@ -5,6 +5,7 @@ import crypto from "crypto";
 import jwt from "jsonwebtoken"; // <-- Import JWT
 import { sendEmail } from "../utils/sendMail/nodemailer.js";
 
+
 // Helper function to generate random password
 const generatePassword = (length = 10) => {
   return crypto.randomBytes(length).toString("hex").slice(0, length);
