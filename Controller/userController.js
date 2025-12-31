@@ -3,6 +3,7 @@
 import bcrypt from "bcryptjs";
 import User from "../Models/UserModels.js";
 import { generatePassword } from "../utils/generatePassword.js";
+import {generateToken} from "../utils/generateToken.js";
 import { sendEmail } from "../utils/sendMail/nodemailer.js";
 
 // REGISTER USER
@@ -52,17 +53,30 @@ export const loginUser = async (req, res) => {
   try {
     const { email, password, role } = req.body;
 
-    // Find user by email and role
     const user = await User.findOne({ email, role });
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user)
+      return res.status(404).json({ message: "User not found" });
 
     if (user.isBlocked)
       return res.status(403).json({ message: "User is blocked" });
 
     const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Invalid password" });
+    if (!isMatch)
+      return res.status(400).json({ message: "Invalid password" });
 
-    res.status(200).json({ message: "Login successful", user });
+    // ✅ JWT TOKEN
+    const token = generateToken(user);
+
+    res.status(200).json({
+      message: "Login successful",
+      token,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      },
+    });
   } catch (err) {
     console.error("LOGIN ERROR:", err.message);
     res.status(500).json({ message: err.message });
