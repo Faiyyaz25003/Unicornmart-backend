@@ -78,3 +78,17 @@ export const getOrderById = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+// ✅ My Orders (User wise)
+export const getMyOrders = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const orders = await Order.find({ userId })
+      .sort({ createdAt: -1 });
+
+    res.status(200).json(orders);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching user orders" });
+  }
+};

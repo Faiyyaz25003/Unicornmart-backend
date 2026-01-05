@@ -79,3 +79,43 @@ export const loginAdmin = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+
+// ✅ Get all admins (Admin Panel)
+export const getAdmins = async (req, res) => {
+  try {
+    const admins = await Admin.find().select("-password");
+
+    res.status(200).json({
+      success: true,
+      count: admins.length,
+      admins,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch admins",
+    });
+  }
+};
+
+// ✅ Get admin by ID
+export const getAdminById = async (req, res) => {
+  try {
+    const admin = await Admin.findById(req.params.id).select("-password");
+
+    if (!admin) {
+      return res.status(404).json({ message: "Admin not found" });
+    }
+
+    res.status(200).json({
+      success: true,
+      admin,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error fetching admin",
+    });
+  }
+};
