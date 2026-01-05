@@ -82,6 +82,8 @@ import adminRoutes from "./Routes/adminRoutes.js";
 import orderRoutes from "./Routes/orderRoutes.js";
 import contactRoutes from "./Routes/contactRoutes.js";
 import chatRoutes from "./Routes/chatRoutes.js";
+import complaintRoutes from "./Routes/complaintRoutes.js";
+
 
 // MODELS
 import Message from "./Models/MessageModel.js";
@@ -103,6 +105,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/chat", chatRoutes);
+app.use("/api/complaints", complaintRoutes);
 
 // CREATE HTTP SERVER (IMPORTANT FOR SOCKET)
 const server = http.createServer(app);
