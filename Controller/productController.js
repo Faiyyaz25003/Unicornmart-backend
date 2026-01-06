@@ -40,11 +40,55 @@ export const deleteProduct = async (req, res) => {
 };
 
 /* INTERESTED */
+/* INTERESTED PRODUCT */
 export const interestedProduct = async (req, res) => {
-  const product = await Product.findById(req.params.id);
-  product.interestedUsers.push(req.body);
-  await product.save();
-  res.json(product);
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product)
+      return res.status(404).json({ message: "Product not found" });
+
+    const { userId, name, email, phone, role } = req.body;
+
+    // ❌ Duplicate interest check
+    const alreadyInterested = product.interestedUsers.find(
+      (u) => u.userId?.toString() === userId
+    );
+
+    if (alreadyInterested) {
+      return res.status(400).json({ message: "Already interested" });
+    }
+
+    product.interestedUsers.push({
+      userId,
+      name,
+      email,
+      phone,
+      role,
+    });
+
+    await product.save();
+
+    res.status(200).json({
+      message: "Interest saved successfully",
+      interestedUsers: product.interestedUsers,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+/* GET ALL INTERESTED USERS (ADMIN PAGE) */
+export const getAllInterestedUsers = async (req, res) => {
+  try {
+    const products = await Product.find(
+      { "interestedUsers.0": { $exists: true } },
+      { scrapName: 1, interestedUsers: 1 }
+    );
+
+    res.status(200).json(products);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
 /* APPROVE + EMAIL */
